@@ -159,11 +159,8 @@ services:
   workload:
     hostname: workload
     init: true
-    build:
-      # dockerfile: ./volumes/workload/Dockerfile
-      context: ./volumes/workload
     depends_on:
       rippled:
         condition: service_healthy
-    image: antithesis_workload_test
+    image: legleux/antithesis_workload_test
     container_name: workload

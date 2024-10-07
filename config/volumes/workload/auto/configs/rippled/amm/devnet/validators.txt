@@ -1,6 +1,0 @@
-[validator_list_keys]
-EDC573E4064B6F53409E722CC1F1BD3C8BDDA0691571ABE10D30FF90E6A23332DF
-
-[validator_list_sites]
-https://vlamm.devnet.rippletest.net
-

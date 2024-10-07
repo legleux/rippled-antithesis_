@@ -1,5 +1,0 @@
-[validator_list_keys]
-EDA5504C7133743FADA46342229B4E9CBBE1CF9BCA19D16633574F7CBB72F79569
-
-[validator_list_sites]
-https://vlsidechain-net2.devnet.rippletest.net

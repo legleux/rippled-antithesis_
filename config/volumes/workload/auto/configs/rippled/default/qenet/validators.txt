@@ -1,5 +1,0 @@
- [validator_list_sites]
-https://gist.githubusercontent.com/manojsdoshi/9b154da59b85fc4de73178e5923ba4e8/raw/6dd96ddabc3f0b6cf6dcda71b061c10a44de0ec4/index.json
-
-[validator_list_keys]
-ED4C955BA5D4BFFEABFA33017C60916C0552F49A24C83EE15C4AF7BE806396405C

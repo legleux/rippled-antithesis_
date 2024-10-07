@@ -23,7 +23,7 @@ from xrpl.transaction import sign_and_submit
 log = logging.getLogger(__name__)
 
 def get_network_base_fee(connection=None): # TODO: Implement
-    return {"Fee": "12"}
+    return "12"
 
 @dataclass
 class Account:
@@ -144,11 +144,11 @@ async def payment(source, destination, amount):
             pass
 
     payment_tx_json = compose_payment_payload(source, destination, amount)
-    log.debug("Payment tx_json: %s", payment_tx_json)
+    log.debug("payment_tx_json: %s", payment_tx_json)
     ws_endpoint = "ws://rippled:6005"
     async with websockets.connect(ws_endpoint) as ws:
-        log.debug("Submitting %s", pp)
-        await ws.send(pp)
+        log.debug("Submitting %s", payment_tx_json)
+        await ws.send(payment_tx_json)
         response = await ws.recv()
         log.debug("Received %s", response)
         return response
@@ -232,7 +232,7 @@ async def account_info(account_id):
     ws.send(json.dumps(
         {
             "command": "account_info",
-            "account": genesis_account["account_id"]
+            "account": account_id
         }))
     response_str = ws.recv()
     response = json.loads(response_str)

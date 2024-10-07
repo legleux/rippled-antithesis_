@@ -47,9 +47,6 @@ async def run_workload() -> int:
         log.info("Got debug ")
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
-    log.info("Starting app!")
-    log.debug("I should be debug level!")
-    # log.setLevel(debug_level)
     log.info("Starting workload...")
     # Create 5 "gateways"
     # print("doin stuff")
@@ -66,12 +63,11 @@ async def run_workload() -> int:
         account_id = result[0]
         account_ids.append(account_id)
         log.debug(f"Task {idx} result: {task.result()}")
-        log.info(f"Task {idx} result: {task.result()}")
 
-    log.info("Account ids: %s", account_ids)
+    log.debug("Account ids: %s", account_ids)
 
     timings = [5, 4, 3, 2, 1, 0.5, 0.2, 0.1, 0.075, 0.05, 0.025, 0.0125, 0.00625]
-    log.info(f"Trying to create {len(timings)} accounts with intervals: {timings}")
+    log.debug(f"Trying to create {len(timings)} accounts with intervals: {timings}")
     for idx, i in enumerate(timings):
         time.sleep(i)
         response = await fund_account2(account_ids[idx])
@@ -81,8 +77,8 @@ async def run_workload() -> int:
             # log.error("Error! Bad result:\n%s", result)
             log.error("engine_result %s", result.get("engine_result"))
             log.error("engine_result_message %s", result.get("engine_result_message"))
-        log.info(response)
-    start = time.time()
+        log.debug(response)
+    start_time = int(time.time())
     sleep_time = 0.1
     max_queue_size = 5
     queue_waited = 0
@@ -90,9 +86,10 @@ async def run_workload() -> int:
     high_fee_times = []
     base_fee_level = 10 # get_base_fee_level() # TODO: implement. Get from network
     while True:
+        log.info(f"{get_open_ledger_fee()=}")
         account = await create_account()
         log.debug("Created %s", account[0])
-        if not int(time.time() - start) % 10 and sleep_time > 0.005:
+        if not int(time.time()) - start_time % 10 and sleep_time > 0.005:
             sleep_time -= 0.01
             log.info("Sleep time reduced to: %s",  sleep_time)
         time.sleep(sleep_time)
@@ -102,17 +99,27 @@ async def run_workload() -> int:
             # time.sleep(3) # wait_for_next_ledger() TODO:
         while open_ledger_fee > base_fee_level:
             high_fee = True
-            high_fee_times.append({"start": time.time.now()})
-            log.info(f"{open_ledger_fee=}")
-            log.info(f"Sleeping until open_ledger_fee returns to {base_fee_level}.")
+            high_fee_times.append({"start": int(time.time())})
+            log.info(f"open_ledger_fee=[{open_ledger_fee}]! Sleeping until open_ledger_fee returns to {base_fee_level}.")
             time.sleep(3)
             open_ledger_fee = get_open_ledger_fee()
-
-            if (high_fee_time:=time.time() - high_fee_times[-1].get("start")) > HIGH_FEE_BLOCKED_TIME:
+            if (high_fee_time:=int(time.time()) - high_fee_times[-1].get("start")) > HIGH_FEE_BLOCKED_TIME:
                 log.critical("Been sleeping for %s due to open_ledger_fee being %s", high_fee_time, open_ledger_fee)
-        high_fee = False
-        high_fee_end_time = time.time()
-        high_fee_times[-1].update({"close": high_fee_end_time, "length": int(high_fee_end_time - high_fee_times[-1]["start"])})
+            else:
+                log.info(f"{high_fee_time=}")
+        if high_fee:
+            high_fee = False
+            high_fee_end_time = int(time.time())
+            chfst = int(high_fee_times[-1]["start"])
+
+            log.info(f"Current High fee start time: { chfst - start_time}")
+            log.info("open ledger fee returned to normal")
+            log.info(f"{get_open_ledger_fee()=}]")
+            log.info(f"Current High fee end time: {high_fee_end_time}")
+            high_fee_times[-1].update({"close": high_fee_end_time, "length": high_fee_end_time - chfst)})
+            log.info(f"High fees[] now: {high_fee_times}")
+        if high_fee_times:
+            log.info(high_fee_times)
         while current_queue_size > max_queue_size:
             queued = True
             queue_waited += 1
@@ -124,8 +131,8 @@ async def run_workload() -> int:
                 log.info("max_queue_size: %s", max_queue_size)
                 log.debug("queue_waited: %s", queue_waited)
             time.sleep(1)
-
         response = await fund_account2(account[0])
+        print(response)
     return 0
 
 def run():

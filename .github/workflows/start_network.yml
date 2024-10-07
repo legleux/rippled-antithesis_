@@ -1,0 +1,7 @@
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: cd config && docker compose up -d && docker logs -f workload & sleep 300 && docker compose down

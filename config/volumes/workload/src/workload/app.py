@@ -116,7 +116,7 @@ async def run_workload() -> int:
             log.info("open ledger fee returned to normal")
             log.info(f"{get_open_ledger_fee()=}]")
             log.info(f"Current High fee end time: {high_fee_end_time}")
-            high_fee_times[-1].update({"close": high_fee_end_time, "length": high_fee_end_time - chfst)})
+            high_fee_times[-1].update({"close": high_fee_end_time, "length": high_fee_end_time - chfst})
             log.info(f"High fees[] now: {high_fee_times}")
         if high_fee_times:
             log.info(high_fee_times)
@@ -132,7 +132,8 @@ async def run_workload() -> int:
                 log.debug("queue_waited: %s", queue_waited)
             time.sleep(1)
         response = await fund_account2(account[0])
-        print(response)
+        # print(response)
+        log.info(f"running for {int(time.time()) - start_time}")
     return 0
 
 def run():

@@ -1,8 +1,7 @@
 on: push
 jobs:
   test:
-    name: Start rippled network
     runs-on: [self-hosted, heavy]
     steps:
     - uses: actions/checkout@v4
-    - run: docker compose up
+    - run: cd config && docker compose up -d && docker logs -f workload

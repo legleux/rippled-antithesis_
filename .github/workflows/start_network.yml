@@ -4,4 +4,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - run: cd config && docker compose up -d && docker logs -f workload & sleep 180 && docker compose down
+    - run: cd config && docker compose up -d && docker logs -f workload

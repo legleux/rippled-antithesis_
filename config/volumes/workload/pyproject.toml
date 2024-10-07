@@ -1,0 +1,42 @@
+[project]
+    name = "workload"
+    version = "0.1.0"
+    description = "Add your description here"
+    authors = [
+        { name = "Michael Legleux", email = "legleux@gmail.com" }
+    ]
+    dependencies = [
+        "websocket-client",
+        "xrpl-py",
+        "requests",
+    ]
+    readme = "README.md"
+    requires-python = ">= 3.11"
+    license = { text = "MIT" }
+
+[project.scripts]
+    "workload" = "workload.app:run"
+    # TODO: Make "watch()" just take a paramter of _what_ to watch
+    # "watch" = "rippled.query_ws:main"
+    # "watch_accounts" = "rippled.watch_accounts:main"
+    # "watch_fee" = "rippled.account:watch_fee"
+
+[build-system]
+    requires = ["hatchling"]
+    build-backend = "hatchling.build"
+
+[tool.rye]
+    managed = true
+    # virtual = true
+    dev-dependencies = [
+        "ruff"
+    ]
+
+[tool.hatch.metadata]
+    allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+    packages = [
+        "src/workload",
+        "src/rippled",
+    ]

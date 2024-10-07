@@ -1,0 +1,8 @@
+services:
+  server:
+    container_name: server
+    image: legleux/server
+
+  client:
+    container_name: client
+    image: legleux/client
